@@ -1,69 +1,59 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SeuProjeto.Models;
-using System;
-using System.Linq;
+﻿using EncutarURL.Data;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Policy;
+using EncutarURL.Models;
 
-namespace SeuProjeto.Controllers
+namespace EncurtadorDeURL.Controllers
 {
     public class UrlController : Controller
     {
-        private readonly UrlContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public UrlController(UrlContext context)
+        public UrlController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // Exibir formulário para inserir URL
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        // Encurtar URL
-        [HttpPost]
+        // Ação para criar o encurtamento
         public IActionResult Create(string originalUrl)
         {
             if (string.IsNullOrEmpty(originalUrl))
-            {
-                return View("Index");
-            }
+                return BadRequest("A URL original não pode ser vazia.");
 
-            // Gerar um código aleatório para a URL encurtada
             var shortenedUrl = GenerateShortenedUrl();
 
-            // Salvar no banco de dados
-            var url = new UrlShortener
+            // Corrigido: Passar o parâmetro para o construtor (se for necessário)
+            var url = new Url(originalUrl)
             {
-                OriginalUrl = originalUrl,
-                ShortenedUrl = shortenedUrl,
-                CreatedAt = DateTime.Now
+                ShortenedUrl = shortenedUrl
             };
 
             _context.Urls.Add(url);
             _context.SaveChanges();
 
-            // Mostrar a URL encurtada para o usuário
-            return View("Result", shortenedUrl);
+            return RedirectToAction("Shortened", new { shortenedUrl = url.ShortenedUrl });
         }
 
-        // Redirecionar para a URL original
-        public IActionResult Redirect(string id)
+
+        // Ação para exibir a URL encurtada
+        public IActionResult Shortened(string shortenedUrl)
         {
-            var url = _context.Urls.FirstOrDefault(u => u.ShortenedUrl == id);
-            if (url == null)
-            {
-                return NotFound();
-            }
+            var url = _context.Urls.FirstOrDefault(u => u.ShortenedUrl == shortenedUrl);
 
-            return Redirect(url.OriginalUrl);
+            if (url == null)
+                return NotFound();
+
+            ViewData["ShortenedUrl"] = url.ShortenedUrl;
+            ViewData["OriginalUrl"] = url.OriginalUrl;
+
+            return View();
         }
 
-        // Gerar código aleatório para a URL encurtada
+        // Método para gerar a URL encurtada
         private string GenerateShortenedUrl()
         {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             var random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             return new string(Enumerable.Range(0, 6).Select(_ => chars[random.Next(chars.Length)]).ToArray());
         }
     }

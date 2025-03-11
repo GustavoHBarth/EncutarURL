@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "URL Encurtada";
+}
+
+<h2>URL Encurtada</h2>
+
+<div class="alert alert-success">
+    <strong>Parabéns!</strong> Sua URL foi encurtada com sucesso.
+</div>
+
+<p><strong>URL Original:</strong> <a href="@ViewData["OriginalUrl"]" target="_blank">@ViewData["OriginalUrl"]</a></p>
+<p><strong>URL Encurtada:</strong> <a href="@ViewData["ShortenedUrl"]" target="_blank">@ViewData["ShortenedUrl"]</a></p>
+
+<!-- Botão para copiar a URL -->
+<button id="copyButton" class="btn btn-secondary mt-3">Copiar URL Encurtada</button>
+
+<script>
+    // Função para copiar a URL encurtada para a área de transferência
+    document.getElementById('copyButton').addEventListener('click', function() {
+        var shortenedUrl = '@ViewData["ShortenedUrl"]';
+        navigator.clipboard.writeText(shortenedUrl)
+            .then(() => alert('URL copiada para a área de transferência!'))
+            .catch(err => alert('Erro ao copiar a URL: ' + err));
+    });
+</script>
