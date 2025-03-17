@@ -2,21 +2,29 @@
     ViewData["Title"] = "Encurtador de URL";
 }
 
-<h2>Encurtador de URL</h2>
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <h2 class="text-center mb-4">🔗 Encurtador de URL</h2>
 
-<!-- Formulário para inserir a URL original -->
-<form method="post" action="/Url/Create">
-    <div class="form-group">
-        <label for="originalUrl">Digite a URL original</label>
-        <input type="url" name="originalUrl" class="form-control" required placeholder="Digite sua URL aqui" />
-    </div>
-    <button type="submit" class="btn btn-primary">Encurtar URL</button>
-</form>
+            <form method="post" action="/Url/Create">
+                <div class="form-group">
+                    <label for="originalUrl">Digite a URL original</label>
+                    <input type="url" name="originalUrl" class="form-control" required placeholder="Digite sua URL aqui" />
+                </div>
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-link"></i> Encurtar URL
+                    </button>
+                </div>
+            </form>
 
-<!-- Exibição de mensagem de erro caso necessário -->
-@if (ViewData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger mt-3">
-        @ViewData["ErrorMessage"]
+            @if (ViewData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger mt-3 text-center">
+                    @ViewData["ErrorMessage"]
+                </div>
+            }
+        </div>
     </div>
-}
+</div>
