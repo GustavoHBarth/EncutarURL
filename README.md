@@ -4,7 +4,13 @@ Um encurtador de URLs simples e eficiente feito em C# com .NET. Converta links l
 
 ## 🚀 Demonstração
 
+#### Página inicial:
 
+![Página inicial](docs/imagens/Index.png)
+
+#### Página de retorno de sucesso:
+
+![Página sucesso](docs/imagens/Sucesso.png)
 
 ## 🛠 Tecnologias utilizadas
 * ✅ C# (.NET)
